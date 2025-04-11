@@ -26,7 +26,7 @@ fun GaertnerCard(gaertner: Gaertner, onClick: () -> Unit) {
         modifier = Modifier
             .padding(8.dp)
             .fillMaxWidth()
-            .background(Color(0xFFB0E57C)) // Pastellgrün
+            .background(Color(0xFFB0E57C))
             .clickable { onClick() }
     ) {
         Column {

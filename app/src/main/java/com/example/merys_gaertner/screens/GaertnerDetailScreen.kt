@@ -13,9 +13,17 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil3.compose.rememberAsyncImagePainter
 import com.example.sexygaertner.data.Gaertner
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 
 @Composable
 fun GaertnerDetailScreen(gaertner: Gaertner, navController: NavHostController) {
+    val context = LocalContext.current
     Image(
         painter = rememberAsyncImagePainter("https://i.pinimg.com/originals/5d/ec/cb/5deccb320fe20f4095dbca54236df3ec.jpg"),
         contentDescription = "Background",
@@ -55,10 +63,30 @@ fun GaertnerDetailScreen(gaertner: Gaertner, navController: NavHostController) {
                     text = gaertner.beschreibung,
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center)
                 )
             }
+            Spacer(Modifier.height(24.dp))
+
+            Button(
+                onClick = {
+                    if (ContextCompat.checkSelfPermission(
+                            context, android.Manifest.permission.CALL_PHONE
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        val intent = Intent(Intent.ACTION_CALL).apply {
+                            data = "tel:${gaertner.telefonnummer}".toUri()
+                        }
+                        context.startActivity(intent)
+                    } else {
+                        Toast.makeText(
+                            context,
+                            "Bitte erlaube Telefonanrufe in den Einstellungen",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+            ) { Text("📞 Jetzt anrufen") }
 
         }
 

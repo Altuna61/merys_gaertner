@@ -16,9 +16,13 @@ fun AppNavigation(navController: NavHostController, gaertnerList: List<Gaertner>
             Startseite(navController = navController)
         }
         composable("liste") {
-            GaertnerListeScreen(gaertnerList) { selected ->
-                navController.navigate("detail/${selected.id}")
-            }
+            GaertnerListeScreen(
+                gaertnerList = gaertnerList,
+                onSelect = { selected ->
+                    navController.navigate("detail/${selected.id}")
+                },
+                navController = navController
+            )
         }
         composable("detail/{id}") { backStackEntry ->
             val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()

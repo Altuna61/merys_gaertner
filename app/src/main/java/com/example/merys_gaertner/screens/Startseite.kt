@@ -1,8 +1,6 @@
 package com.example.merys_gaertner.screens
 
 import coil3.compose.rememberAsyncImagePainter
-
-
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -15,7 +13,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import coil3.compose.rememberAsyncImagePainter
 
 @Composable
 fun Startseite(navController: NavHostController) {
@@ -46,7 +43,7 @@ fun Startseite(navController: NavHostController) {
             )
 
             Text(
-                text = "Willkommen bei Mery’s Gartenparadies! ",
+                text = "Willkommen im Gartenparadies – miete dir deinen Traumgärtner!",
                 style = MaterialTheme.typography.bodyLarge.copy(
                     fontWeight = FontWeight.SemiBold,
                     color = Color(0xFF006400)
@@ -71,7 +68,7 @@ fun Startseite(navController: NavHostController) {
                     .padding(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
             ) {
-                Text("Miete deinen Gärtner")
+                Text("Miete deinen Gärtner 🌱")
             }
         }
     }
