@@ -16,6 +16,9 @@ import com.example.sexygaertner.data.Gaertner
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.widget.Toast
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -42,8 +45,8 @@ fun GaertnerDetailScreen(gaertner: Gaertner, navController: NavHostController) {
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .align(Alignment.TopStart),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .align(Alignment.TopStart)
+                .verticalScroll(rememberScrollState()),
         ) {
             Spacer(Modifier.height(100.dp))
             Image(
@@ -66,27 +69,46 @@ fun GaertnerDetailScreen(gaertner: Gaertner, navController: NavHostController) {
                 )
             }
             Spacer(Modifier.height(24.dp))
-
-            Button(
-                onClick = {
-                    if (ContextCompat.checkSelfPermission(
-                            context, android.Manifest.permission.CALL_PHONE
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
-                        val intent = Intent(Intent.ACTION_CALL).apply {
-                            data = "tel:${gaertner.telefonnummer}".toUri()
+            Row {
+                Button(
+                    onClick = {
+                        if (ContextCompat.checkSelfPermission(
+                                context, android.Manifest.permission.CALL_PHONE
+                            ) == PackageManager.PERMISSION_GRANTED
+                        ) {
+                            val intent = Intent(Intent.ACTION_CALL).apply {
+                                data = "tel:${gaertner.telefonnummer}".toUri()
+                            }
+                            context.startActivity(intent)
+                        } else {
+                            Toast.makeText(
+                                context,
+                                "Bitte erlaube Telefonanrufe in den Einstellungen",
+                                Toast.LENGTH_LONG
+                            ).show()
                         }
-                        context.startActivity(intent)
-                    } else {
-                        Toast.makeText(
-                            context,
-                            "Bitte erlaube Telefonanrufe in den Einstellungen",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
-            ) { Text("📞 Jetzt anrufen") }
+                    }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+                ) { Text("📞 Jetzt anrufen") }
 
+
+
+
+                Spacer(Modifier.padding(20.dp))
+
+
+                Button(
+                    onClick = {
+                        // spezielle URI(.toUri() wandelt String in Uri-Obj) für SMS, die Android erkennt und an die passende App (SMS-App) weiterreicht
+                        val smsUri = "smsto:${gaertner.telefonnummer}".toUri()
+                        // intent: „Ich möchte etwas tun – in diesem Fall: Eine SMS an diese Nummer senden.“
+                        val intent = Intent(Intent.ACTION_SENDTO, smsUri)
+                        context.startActivity(intent)
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+                ) {
+                    Text("✉️ SMS verschicken")
+                }
+            }
         }
 
         Button(
