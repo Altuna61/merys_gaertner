@@ -1,3 +1,6 @@
+// 3. Die Karte bauen: Zeigt Bild, Name, Beschreibung an
+// clickable { onClick() } -> öffnet Detailansicht beim Drücken
+
 package com.example.merys_gaertner.ui.components
 
 import androidx.compose.foundation.Image
@@ -27,8 +30,7 @@ fun GaertnerCard(gaertner: Gaertner, onClick: () -> Unit) {
             .padding(8.dp)
             .fillMaxWidth()
             .background(Color(0xFFB0E57C))
-            .clickable { onClick() }
-    ) {
+            .clickable { onClick() }) {
         Column {
             Image(
                 painter = rememberAsyncImagePainter(gaertner.bildUrl),

@@ -1,3 +1,7 @@
+// 6. Navigation einbauen:
+// 3 Routen (Startseite, Liste, Detailansicht)
+// basierend auf ID des Gärtners
+
 package com.example.sexygaertner.navigation
 
 import androidx.compose.runtime.Composable

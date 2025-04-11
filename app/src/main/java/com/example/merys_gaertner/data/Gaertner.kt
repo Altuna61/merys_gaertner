@@ -1,3 +1,5 @@
+// 1. Datenmodell anlegen
+
 package com.example.sexygaertner.data
 
 data class Gaertner(

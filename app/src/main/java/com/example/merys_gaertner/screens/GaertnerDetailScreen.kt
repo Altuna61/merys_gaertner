@@ -1,3 +1,5 @@
+// 5. Detailansicht bauen
+
 package com.example.merys_gaertner.screens
 
 import androidx.compose.foundation.Image
@@ -17,8 +19,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
@@ -26,13 +26,14 @@ import androidx.core.net.toUri
 @Composable
 fun GaertnerDetailScreen(gaertner: Gaertner, navController: NavHostController) {
     val context = LocalContext.current
-    Image(
-        painter = rememberAsyncImagePainter("https://i.pinimg.com/originals/5d/ec/cb/5deccb320fe20f4095dbca54236df3ec.jpg"),
-        contentDescription = "Background",
-        modifier = Modifier.fillMaxSize(),
-        contentScale = ContentScale.Crop
-    )
+
     Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = rememberAsyncImagePainter("https://i.pinimg.com/originals/5d/ec/cb/5deccb320fe20f4095dbca54236df3ec.jpg"),
+            contentDescription = "Background",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop
+        )
 
         Text(
             text = "🌱${gaertner.name}",
@@ -42,73 +43,85 @@ fun GaertnerDetailScreen(gaertner: Gaertner, navController: NavHostController) {
                 .align(Alignment.TopEnd)
         )
 
-        Column(
+        LazyColumn(
             modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.TopStart)
-                .verticalScroll(rememberScrollState()),
+                .padding(horizontal = 16.dp)
+                .align(Alignment.TopStart),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.height(100.dp))
-            Image(
-                painter = rememberAsyncImagePainter(gaertner.bildUrl),
-                contentDescription = gaertner.name,
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.Crop
-            )
-            Spacer(Modifier.height(50.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally)
-            ) {
+            item { Spacer(modifier = Modifier.height(100.dp)) }
+
+            item {
+                Image(
+                    painter = rememberAsyncImagePainter(gaertner.bildUrl),
+                    contentDescription = gaertner.name,
+                    modifier = Modifier.fillMaxWidth(),
+                    contentScale = ContentScale.Crop
+                )
+            }
+
+            item { Spacer(modifier = Modifier.height(50.dp)) }
+
+            item {
                 Text(
                     text = gaertner.beschreibung,
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
-            Spacer(Modifier.height(24.dp))
-            Row {
-                Button(
-                    onClick = {
-                        if (ContextCompat.checkSelfPermission(
-                                context, android.Manifest.permission.CALL_PHONE
-                            ) == PackageManager.PERMISSION_GRANTED
-                        ) {
-                            val intent = Intent(Intent.ACTION_CALL).apply {
-                                data = "tel:${gaertner.telefonnummer}".toUri()
-                            }
-                            context.startActivity(intent)
-                        } else {
-                            Toast.makeText(
-                                context,
-                                "Bitte erlaube Telefonanrufe in den Einstellungen",
-                                Toast.LENGTH_LONG
-                            ).show()
-                        }
-                    }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
-                ) { Text("📞 Jetzt anrufen") }
 
+            item { Spacer(modifier = Modifier.height(24.dp)) }
 
-
-
-                Spacer(Modifier.padding(20.dp))
-
-
-                Button(
-                    onClick = {
-                        // spezielle URI(.toUri() wandelt String in Uri-Obj) für SMS, die Android erkennt und an die passende App (SMS-App) weiterreicht
-                        val smsUri = "smsto:${gaertner.telefonnummer}".toUri()
-                        // intent: „Ich möchte etwas tun – in diesem Fall: Eine SMS an diese Nummer senden.“
-                        val intent = Intent(Intent.ACTION_SENDTO, smsUri)
-                        context.startActivity(intent)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50)),
+            item {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    Text("✉️ SMS verschicken")
+                    Button(
+                        onClick = {
+                            if (ContextCompat.checkSelfPermission(
+                                    context, android.Manifest.permission.CALL_PHONE
+                                ) == PackageManager.PERMISSION_GRANTED
+                            ) {
+                                val intent = Intent(Intent.ACTION_CALL).apply {
+                                    data = "tel:${gaertner.telefonnummer}".toUri()
+                                }
+                                context.startActivity(intent)
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Bitte erlaube Telefonanrufe in den Einstellungen",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+                    ) {
+                        Text("📞 Jetzt anrufen")
+                    }
+
+                    Button(
+                        onClick = {
+                            val smsUri = "smsto:${gaertner.telefonnummer}".toUri()
+                            val intent = Intent(Intent.ACTION_SENDTO, smsUri)
+                            context.startActivity(intent)
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF4CAF50))
+                    ) {
+                        Text("✉️ SMS verschicken")
+                    }
                 }
             }
+
+            item { Spacer(modifier = Modifier.height(32.dp)) }
+
+            // Kalender ganz unten
+            item {
+                DatePickerDocked()
+            }
+
+            item { Spacer(modifier = Modifier.height(64.dp)) }
         }
 
         Button(
@@ -120,6 +133,5 @@ fun GaertnerDetailScreen(gaertner: Gaertner, navController: NavHostController) {
         ) {
             Text("Zurück zur Auswahl")
         }
-
     }
 }
