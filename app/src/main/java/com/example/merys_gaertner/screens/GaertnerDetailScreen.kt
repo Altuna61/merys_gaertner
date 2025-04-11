@@ -17,7 +17,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 
